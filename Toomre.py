@@ -186,6 +186,20 @@ def Make_Plots(results,t, dt):
         plt.plot(results[2*i][index], results[2*i + 1][index], 'ro', label = "Stars")
     plt.show()
     
+def Make_Plots_Green_Star(results, t, dt, GreenStar):
+    index = int(t/dt)
+    plt.figure(figsize = (7, 7))
+    plt.grid()
+    plt.xlim(-10,7)
+    plt.ylim(-16,15)
+    plt.plot(results[0][:index], results[1][:index], 'b--', label = 'Disturbant Galaxy')
+    for i in range(1,121):
+        plt.plot(results[2*i][index], results[2*i + 1][index], 'ro', label = "Stars")
+    for i in range(GreenStar, GreenStar+1):
+        plt.plot(results[2*i][index], results[2*i + 1][index], 'go', label = "Highlighted Star")
+    plt.show()
+    
+    
 def Generate_Data(dataset = 'all', save = True):
     
     '''
