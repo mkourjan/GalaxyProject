@@ -2,46 +2,69 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
-from IPython.html.widgets import interact, interactive
+from IPython.html.widgets import interact, interactive, fixed
 
-
+G = 4.49955370898e-08 #kpc^3 Msol^-1 (10^8 years)^-2
+RCM = 0.; xCM = 0.; yCM = 0. #let origin be at CM
+Rmin = 25 #kpc
 pi = np.pi
-def ring(particles,radius,G,M):
+
+def Set_Init_R_Cond(Ry0, M, S):
+    #minimum separation distance
+    Rmin = 25.0 #kpc
+
+    #Velocity at distance of closest approach
+    Vmin = np.sqrt(2.*G*(M+S)/Rmin) #parabolic orbit
+
+    #Angular momentum per unit mass at distance of closest approach
+    hmin = Rmin*Vmin #r x v - angular momentum per unit mass 
+
+    #From the orbital equations, relationship between geometric and physical parameters
+    c = hmin**2/(G*(M+S))
+    beta = c/2.
+    alpha = -1./(2*c)
+
+    #Set a range of y values and compute the corresponding x,R values for initial points on a parabolic orbit
     
-    '''
-    Set initial positions and velocities for all stars.
-    '''
+    Rx0 = beta + alpha*Ry0**2
+
+    R0 = np.sqrt(Rx0**2+Ry0**2)
+
+    #unit tangent vector for the parabola
+    T_x = 2*alpha*Ry0/np.sqrt((2*alpha*Ry0)**2+1)
+    T_y = 1./np.sqrt((2*alpha*Ry0)**2+1)
+
+    #Velocity vector
+    V0 = np.sqrt(2.*G*(M+S)/R0)
+    Vx0 = V0*T_x
+    Vy0 = V0*T_y
+    return Rx0, Ry0, Vx0, Vy0
+
+def ring(particles,percent,G,M):
     
+    radius = Rmin * percent
     particle = []
     velocity = []
     theta_n = 0
-    arclen = (2*pi)/particles           ## Arc length equally divided amongst the number of particles around circle
-    v = np.sqrt((G*M)/radius)           ## Velocity for central force to stay in a circular orbit
+    arclen = (2*pi)/particles              ## Arc length equally divided amongst the number of particles around circle
+    v = np.sqrt((G*M)/radius)                 ## Velocity for central force to stay in a circular orbit
     while len(particle) < particles:
         angle = theta_n*arclen
         beta = angle + (pi/2.)          ## Angle beta = angle of the position plus 90 degrees, for velocity vector
         theta_n += 1
         particle.append((radius*np.cos(angle), radius*np.sin(angle)))   ## x = r*cos(theta)  y = r*sin(theta)
-        velocity.append((v*np.cos(beta), v*np.sin(beta)))               ## vx = v*cos(beta)  vy = v*sin(beta)
+        velocity.append((v*np.cos(beta), v*np.sin(beta)))               ## Same concept here as above.
     return np.array(particle),np.array(velocity)            ## Returns two arrays, particle position and velocity.
 
 def init_rings_123(G,M):
-    '''
-    Arrange stars into rings located at a distance that is a 
-    certain percentage of Rmin.  Rmin is the minimum distance 
-    between the disruptor galaxy and the disrupted galaxy.
-    This function is only used on direct, retrograde, and light
-    mass disruptor cases.
-    '''
-    
-    ring1,velocity1 = ring(12,.2,G,M)     ## The positions of the stars are dependent on details found in the paper by Toomre et al.
+    ring1,velocity1 = ring(12,.2,G,M)     ## All of these are dependent on details found in the paper by Toomre et al.
     ring2,velocity2 = ring(18,.3,G,M)
     ring3,velocity3 = ring(24,.4,G,M)
     ring4,velocity4 = ring(30,.5,G,M)
     ring5,velocity5 = ring(36,.6,G,M)
     rings = np.array([ring1,ring2,ring3,ring4,ring5])
     velocity = np.array([velocity1,velocity2,velocity3,velocity4,velocity5])
-    return rings,velocity             ## Returns arrays of both the positions and velocity.
+    return rings,velocity             ## Returns arrays of both
 
 def init_rings_4(G,M):
     
@@ -62,16 +85,10 @@ def init_rings_4(G,M):
     return rings,velocity             ## Returns arrays of both the positions and velocity.
 
 def unpack_rings_vel(rings,velocity):
-    
-    '''
-    Make 4 arrays that hold the information for the x and y star positions, and the
-    x and y star velocities. 
-    '''
-    
-    rx_points = []                             ## x-coordinates of all stars
-    ry_points = []                             ## y-coordinates of all stars
-    vrx = []                                   ## initial x velocity of all stars
-    vry = []                                   ## initial y velocity of all stars
+    rx_points = []                             ## x-coordinates of all massless particles
+    ry_points = []                             ## y-coordinates
+    vrx = []                                   ## initial x velocity
+    vry = []                                   ## initial y velocity
     for ring in rings:
         for point in ring:
             rx_points.append(point[0])
@@ -83,38 +100,35 @@ def unpack_rings_vel(rings,velocity):
     return np.array(rx_points), np.array(ry_points), np.array(vrx), np.array(vry)  ## Returns numpy arrays of values
 
 def derivgalaxy(y,t,M,S):
+    G = 4.49955370898e-08 #kpc^3 M_sol^-1 unitTime^-2
+    Rx = y[0]
+    Vx = y[1]
+
+    Ry = y[2]
+    Vy = y[3]
     
-    '''
-    Function extracts information from the 4 arrays in unpack_rings_vel
-    function and plugs the values into the given differential equations
-    that describe the motion of the stars and the motion of the disruptor
-    galaxy.  The output is a single array.
-    '''
+    rxs = y[4]
+    vrx = y[5]
     
-    G = 4.302e-3 #pc(M_solar)^-1 (km/s)^2
-    vRx = y[0]
-    vRy = y[2]
-    Rx = y[1]
-    Ry = y[3]
-    vrx = y[4]
-    vry = y[6]
-    rx = y[5]
-    ry = y[7]
+    rys = y[6]
+    vry = y[7]
+    
+    delta_x = (Rx-rxs)
+    delta_y = (Ry-rys)
+    
     R = np.sqrt(Rx**2+Ry**2)
-    delta_x = (Rx-rx)
-    delta_y = (Ry-ry)
     
-    dvrx_dt = -G * ((M/np.sqrt(rx**2. + ry**2.)**3.)*rx - (S/np.sqrt(delta_x**2.+delta_y**2.)**3.)*delta_x #Given differential equation describing the motion of the stars.
+    dvrx_dt = -G * ((M/np.sqrt(rxs**2. + rys**2.)**3.)*rxs - (S/np.sqrt(delta_x**2.+delta_y**2.)**3.)*delta_x 
                                                         + (S/np.sqrt(Rx**2.+Ry**2.)**3.)*Rx)
-    dvry_dt = -G * ((M/np.sqrt(rx**2. + ry**2.)**3.)*ry - (S/np.sqrt(delta_x**2.+delta_y**2.)**3.)*delta_y 
+    dvry_dt = -G * ((M/np.sqrt(rxs**2. + rys**2.)**3.)*rys - (S/np.sqrt(delta_x**2.+delta_y**2.)**3.)*delta_y 
                                                         + (S/np.sqrt(Rx**2.+Ry**2.)**3.)*Ry)
     
-    dvRx_dt = -G * ((M+S)/(np.sqrt(Rx**2+Ry**2))**3)*Rx #Given differential equation describing the motion of the Disruptor Galaxy.
+    dvRx_dt = -G * ((M+S)/(np.sqrt(Rx**2+Ry**2))**3)*Rx                                                      
     dvRy_dt = -G * ((M+S)/(np.sqrt(Rx**2+Ry**2))**3)*Ry
     
-    return np.array([dvRx_dt, vRx, dvRy_dt, vRy, dvrx_dt, vrx, dvry_dt, vry])
+    return np.array([Vx, dvRx_dt, Vy, dvRy_dt, vrx, dvrx_dt, vry, dvry_dt])
 
-def Make_Master_Array(Case = 1,Rx0 = -8, Ry0 = -9,Initial_velocity_X = 0.85,Initial_velocity_Y = 0.65,t = 11., M=330., S=330., dt = 0.01):
+def Make_Master_Array(Case = 1,Ry0 = -80.,M=1.0e11, S=1.0e11):
     
     '''
     The function takes the single array from derivgalaxy and plugs it into
@@ -124,8 +138,10 @@ def Make_Master_Array(Case = 1,Rx0 = -8, Ry0 = -9,Initial_velocity_X = 0.85,Init
     columns represent positions of the disruptor galaxy and all of the stars, and the
     rows represent a particular time.
     '''
-    
-    G = 4.302e-3 #pc(M_solar)^-1 (km/s)^2\
+    Rmin = 25 #kpc
+    tmax = 20.
+    dt = 0.007
+    ts = np.arange(0.,tmax+dt/10.,dt)
     
     
     if Case ==1 or Case == 2 or Case == 3:
@@ -133,29 +149,26 @@ def Make_Master_Array(Case = 1,Rx0 = -8, Ry0 = -9,Initial_velocity_X = 0.85,Init
     elif Case == 4:
         rings,velocity = init_rings_4(G,M)
     
+    Rx0, Ry0, Vx0, Vy0 = Set_Init_R_Cond(Ry0=-80., M = 1.0e11, S = 1.0e11)
+    rx0,ry0,vx0,vy0 = unpack_rings_vel(rings,velocity)    ## Converts values determined above to 1-D arrays
     
-    rx0,ry0,vrx_0,vry_0 = unpack_rings_vel(rings,velocity)    ## Converts values determined above to 1-D arrays
-    vRx_0 = Initial_velocity_X          ## Initial velocity of disruptor galaxy in x direction
-    vRy_0 = Initial_velocity_Y          ## Initial velocity of disruptor galaxy in y direction
-    
-    ts = np.arange(0.,t+0.1,0.0075)
     
     MasterArray = []
     
     for n in range(len(rx0)):   ## Runs for all 120 particles in initial condition vectors.
         
-        output = odeint(derivgalaxy, np.array([vRx_0,Rx0,vRy_0,Ry0,vrx_0[n],rx0[n],vry_0[n],ry0[n]]),
+        output = odeint(derivgalaxy, np.array([Rx0, Vx0, Ry0, Vy0, rx0[n], vx0[n],ry0[n], vy0[n]]),
                         ts, args=(M, S)) ## Solve the differential equation for each time index 
                                          ##and output the position values of the stars and disruptor galaxy.
             
         
-        rx = output[:,5]                
-        ry = output[:,7]
+        rx = output[:,4]                
+        ry = output[:,6]
             
         if n == 0:
             
-            Rx = output[:,1] 
-            Ry = output[:,3]                
+            Rx = output[:,0] 
+            Ry = output[:,2]                
             
             MasterArray.append(Rx)
             MasterArray.append(Ry)
@@ -169,36 +182,66 @@ def Make_Master_Array(Case = 1,Rx0 = -8, Ry0 = -9,Initial_velocity_X = 0.85,Init
             
     return MasterArray
 
-def Make_Plots(results,t, dt):
-    
-    '''
-    Function extracts all positions of stars and the disruptor galaxy from a matrix and plots them.
-    This is the Direct Passage situation.
-    '''
-    
+def Make_Plot_stars(results, M, S, t, dt):
+
     index = int(t/dt)
-    plt.figure(figsize = (7, 7))
+    
+    Rx = results[0][:index]
+    Ry = results[1][:index]
+    RxS = xCM + (M/(M+S))*Rx
+    RyS = yCM + (M/(M+S))*Ry
+    RxM = xCM - (S/(M+S))*Rx
+    RyM = yCM - (S/(M+S))*Ry
+    RxS -= RxM
+    RyS -= RyM
+    RxM -= RxM
+    RyM -= RyM
+    plt.plot(RxS, RyS, 'b--', label = 'Disturbing Galaxy')
+    plt.plot(RxS[-1], RyS[-1], 'bo')
+    plt.plot(RxM, RyM, 'r--', label = 'Main Galaxy')
+    plt.plot(RxM[-1], RyM[-1], 'ro')
+    for i in range(1, 121):
+        plt.plot(results[2*i][index]+RxM[-1], results[2*i + 1][index]+RyM[-1], 'go', label = "Stars")
+        
+    plt.xlim(1.1*Rx[0],xCM-1.1*Rx[0])
+    plt.ylim(1.1*Ry[0],yCM-1.1*Ry[0])
+    plt.xlim(-150,150)
+    plt.ylim(-150,150)
     plt.grid()
-    plt.xlim(-10,7)
-    plt.ylim(-16,15)
-    plt.plot(results[0][:index], results[1][:index], 'b--', label = 'Disturbant Galaxy')
-    for i in range(1,121):
-        plt.plot(results[2*i][index], results[2*i + 1][index], 'ro', label = "Stars")
+    #plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15),
+          #ncol=2, fancybox=True, shadow=True)
     plt.show()
     
-def Make_Plots_Green_Star(results, t, dt, GreenStar):
-    index = int(t/dt)
-    plt.figure(figsize = (7, 7))
-    plt.grid()
-    plt.xlim(-10,7)
-    plt.ylim(-16,15)
-    plt.plot(results[0][:index], results[1][:index], 'b--', label = 'Disturbant Galaxy')
-    for i in range(1,121):
-        plt.plot(results[2*i][index], results[2*i + 1][index], 'ro', label = "Stars")
-    for i in range(GreenStar, GreenStar+1):
-        plt.plot(results[2*i][index], results[2*i + 1][index], 'go', label = "Highlighted Star")
-    plt.show()
+def Make_Plots_Yellow_Star(results, M, S, t, dt, YellowStar):
     
+    index = int(t/dt)
+    
+    Rx = results[0][:index]
+    Ry = results[1][:index]
+    RxS = xCM + (M/(M+S))*Rx
+    RyS = yCM + (M/(M+S))*Ry
+    RxM = xCM - (S/(M+S))*Rx
+    RyM = yCM - (S/(M+S))*Ry
+    RxS -= RxM
+    RyS -= RyM
+    RxM -= RxM
+    RyM -= RyM
+    plt.plot(RxS, RyS, 'b--', label = 'Disturbing Galaxy')
+    plt.plot(RxS[-1], RyS[-1], 'bo')
+    plt.plot(RxM, RyM, 'r--', label = 'Main Galaxy')
+    plt.plot(RxM[-1], RyM[-1], 'ro')
+    for i in range(1, 121):
+        plt.plot(results[2*i][index]+RxM[-1], results[2*i + 1][index]+RyM[-1], 'go', label = "Stars")
+    for i in range(YellowStar, YellowStar+1):
+        plt.plot(results[2*i][index], results[2*i + 1][index], 'yo', label = "Highlighted Star")    
+    #plt.xlim(1.1*x[0],xCM-1.1*x[0])
+    #plt.ylim(1.1*y[0],yCM-1.1*y[0])
+    plt.xlim(-150,150)
+    plt.ylim(-150,150)
+    plt.grid()
+    #plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15),
+          #ncol=2, fancybox=True, shadow=True)
+    plt.show()
     
 def Generate_Data(dataset = 'all', save = True):
     
@@ -208,16 +251,16 @@ def Generate_Data(dataset = 'all', save = True):
     
     if dataset == 'all':
 
-        results_A = Make_Master_Array(Case = 1, Rx0 = -8, Ry0 = -9, Initial_velocity_X = 0.85,Initial_velocity_Y = 0.65,t = 20, M=330., S=330., dt = 0.0075)
+        results_A = Make_Master_Array(Case = 1, Ry0 = -80., M=1.0e11, S=1.0e11)       
         #Direct Passage 
 
-        results_B = Make_Master_Array(Case = 2, Rx0 = -8, Ry0 = 9,Initial_velocity_X = 0.85,Initial_velocity_Y = -0.65,t = 20, M=330., S=330., dt = 0.0075)
+        results_B = Make_Master_Array(Case = 2,Ry0 = 80., M=1.0e11, S=1.0e11)                                                                                
         #Retrograde Passage
 
-        results_C = Make_Master_Array(Case = 3,Rx0 = -8, Ry0 = -9, Initial_velocity_X = 0.85,Initial_velocity_Y = 0.65,t = 20, M=330., S=82.5, dt = 0.0075)
+        results_C = Make_Master_Array(Case = 3,Ry0 = -80., M=1.0e11, S=1.0e11/4)
         #Light Mass Disruptor
 
-        results_D = Make_Master_Array(Case = 4, Rx0 = -8, Ry0 = -9, Initial_velocity_X = 0.85,Initial_velocity_Y = 0.65,t = 20, M=82.5, S=330., dt = 0.0075)
+        results_D = Make_Master_Array(Case = 4, Ry0 = -80., M=1.0e11, S=1.0e11*4)
         #Heavy Mass Disruptor
 
     if save == True:
@@ -225,4 +268,5 @@ def Generate_Data(dataset = 'all', save = True):
         np.save('Toomre_A.npy', results_A)
         np.save('Toomre_B.npy', results_B)
         np.save('Toomre_C.npy', results_C)
-        np.save('Toomre_D.npy', results_D)
+        np.save('Toomre_D.npy', results_D)    
+    
