@@ -1,52 +1,189 @@
-\documentclass[prb,preprint]{revtex4-1} 
-% The line above defines the type of LaTeX document.
-% Note that AJP uses the same style as Phys. Rev. B (prb).
+\documentclass[11pt]{article}
 
-% The % character begins a comment, which continues to the end of the line.
+% Users of the {thebibliography} environment or BibTeX should use the
+% scicite.sty package, downloadable from *Science* at
+% www.sciencmag.org/misc/con-info.shtml .  This package should properly
+% format in-text reference calls and reference-list numbers.
+\usepackage{epsfig}
+\usepackage{geometry}
+\geometry{letterpaper}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+%\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+% Use times if you have the font installed; otherwise, comment out the
+% following line.
 
-\usepackage{amsmath}  % needed for \tfrac, \bmatrix, etc.
-\usepackage{amsfonts} % needed for bold Greek, Fraktur, and blackboard bold
-\usepackage{graphicx} % needed for figures
+\usepackage{times}
 
-\begin{document}
+% The preamble here sets up a lot of new/revised commands and
+% environments.  It's annoying, but please do *not* try to strip these
+% out into a separate .sty file (which could lead to the loss of some
+% information when we convert the file to other formats).  Instead, keep
+% them in the preamble of your main LaTeX source file.
 
-% Be sure to use the \title, \author, \affiliation, and \abstract macros
-% to format your title page.  Don't use lower-level macros to  manually
-% adjust the fonts and centering.
+
+% The following parameters seem to provide a reasonable page setup.
+
+\topmargin 0.0cm
+\oddsidemargin 0.2cm
+\textwidth 16cm 
+\textheight 21cm
+\footskip 1.0cm
+
+
+%The next command sets up an environment for the abstract to your paper.
+
+\newenvironment{sciabstract}{%
+\begin{quote} \bf}
+{\end{quote}}
+
+
+% If your reference list includes text notes as well as references,
+% include the following line; otherwise, comment it out.
+
+%\renewcommand\refname{References and Notes}
+
+% The following lines set up an environment for the last note in the
+% reference list, which commonly includes acknowledgments of funding,
+% help, etc.  It's intended for users of BibTeX or the {thebibliography}
+% environment.  Users who are hand-coding their references at the end
+% using a list environment such as {enumerate} can simply add another
+% item at the end, and it will be numbered automatically.
+
+\newcounter{lastnote}
+\newenvironment{scilastnote}{%
+\setcounter{lastnote}{\value{enumiv}}%
+\addtocounter{lastnote}{+1}%
+\begin{list}%
+{\arabic{lastnote}.}
+{\setlength{\leftmargin}{.22in}}
+{\setlength{\labelsep}{.5em}}}
+{\end{list}}
+
+
+% Include your paper's title here
 
 \title{Teaching Numerical Methods in the Context of Galaxy Mergers}
-%\title{Galaxy mergers as a tool for teaching computational methods}
-% In a long title you can use \\ to force a line break at a certain location.
 
-\author{Maria Kourjanskaia}
-\email{mashakrj@gmail.com} % optional
-%\altaffiliation[permanent address: ]{101 Main Street, 
-%  Anytown, USA} % optional second address
-% If there were a second author at the same address, we would put another 
-% \author{} statement here.  Don't combine multiple authors in a single
-% \author statement.
-\affiliation{Department of Physics, California Polytechnic State University, San Luis Obispo, CA 93407}
-% Please provide a full mailing address here.
 
-%\author{J.~L.~Klay}
-%\email{jklay@calpoly.edu}
-%\affiliation{Department of Physics, California Polytechnic State University, San Luis Obispo, CA 93407}
+% Place the author information here.  Please hand-code the contact
+% information and notecalls; do *not* use \footnote commands.  Let the
+% author contact information appear immediately below the author names
+% as shown.  We would also prefer that you don't change the type-size
+% settings shown here.
 
-% See the REVTeX documentation for more examples of author and affiliation lists.
+\author
+{\\
+\\
+\\
+\\
+A Senior Project
+\\
+\\
+By
+\\
+\\
+Maria Kourjanskaia
+\\
+\\
+\\ 
+\normalsize{Advisor, Dr. Jennifer Klay}
+\\
+\\
+\normalsize{Department of Physics, California Polytechnic University SLO}\\
+\\
+\\
+\\
+\\
+\\
+}
+
+% Include the date command, but leave its argument blank.
 
 \date{\today}
 
-\begin{abstract}
+
+                                      % Activate to display a given date or no date
+
+\begin{document}
+\baselineskip21pt
+\maketitle
+
+
+\newpage
+
+\begin{center}Approval Page\end{center}
+\bigskip
+
+\begin{flushleft}
+\textbf{Title: Teaching Numerical Methods in the Context of Galaxy Mergers}
+\medskip
+
+\textbf{Author: Maria Kourjanskaia}
+\medskip
+
+\textbf{Date Submitted: Month XX, 201X}
+\end{flushleft}
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+
+
+\begin{flushright}
+Senior Project Advisor: Dr. Jennifer Klay
+
+\bigskip
+\bigskip
+
+
+\line(1,0){200}
+
+Signature
+\bigskip
+
+\line(1,0){200}
+
+Date
+
+
+
+\end{flushright}
+
+
+
+
+\newpage
+
+\tableofcontents
+
+\listoftables
+
+\listoffigures
+
+\newpage
+
+\section{Abstract}
 Methods of teaching numerical methods to solve ordinary differential equations in the context of galaxy mergers were explored. The research published in a paper by Toomre and Toomre in 1972 describing the formation of galactic tails and bridges from close tidal interactions was adapted into a project targeting undergraduate physics students. Typically undergraduate physics students only take one Computational Physics class in which various techniques and algorithms are taught. Although it is important to study computational physics techniques, it is just as important to apply this knowledge to a problem that is representative of what computational physics researchers are investigating today. The model that was developed is capable of showing general trends in galactic evolution and is a good introduction for students who hope to expand on this topic in the future.
-\end{abstract}
-% AJP requires an abstract for all regular article submissions.
-% Abstracts are optional for submissions to the "Notes and Discussions" section.
 
-\maketitle % title page is now complete
-
-
-\section{Introduction} % Section titles are automatically converted to all-caps.
-% Section numbering is automatic.
+\section{Introduction} 
 
 Computational physics is based upon the idea that a computer can simulate certain physical environments to produce novel scientific conclusions.  This field allows scientists to conduct experiments on the computer that are just not realistic or possible to do in the real world because of the investigation of topics involving extremely large data sets and complicated physical interactions\cite{Hjorth2008}.  This paper investigates the components and processes of modeling galaxy mergers on an undergraduate academic level.  The project outlined in this paper is derived from a paper written by Toomre and Toomre in 1972 that described the formation of galactic tails and bridges from close tidal interactions \cite{Toomre1972}. This project could be assigned to undergraduate students in an introductory computational physics class to demonstrate the capabilities and possibilities of what the field has to offer.  
 
@@ -56,8 +193,17 @@ Although this project uses ordinary differential equations to model galaxy merge
 
 Although Toomre and Toomre's paper dates back to 1972, it is still a good model to use for undergraduate students in a computational physics class.  Their research provided good and accurate results despite the assumptions and simplifications that they made.  Researchers today can produce more precise results and investigate a larger range of topics than in 1972, but the foundation for producing these results is still the same.  This project is an excellent introduction to the capabilities of computational physics and is a great learning opportunity for undergraduate physics students.  
 
-
 \section{Background Theory}
+
+Galaxies are a collection of stars that are orbiting around their common center of mass, interacting through gravity.  Galaxies come in various shapes and sizes, but the scientist Edwin Hubble designed a classification system for galaxies that is still used today.  He grouped galaxies into four categories including elliptical, spiral, disk, and irregular.  Today we have expanded upon these four groups, but only to add subcategories.  Today elliptical galaxies can be classified according to the ratio between their minor axis and major axis dimensions to differentiate between more circular as opposed to more elongated shapes.  Spiral galaxies are now classified with how tight or loose the spiral arms are, and whether or not there are a cluster of stars in a bar shape in the center of the galaxy.  Disk galaxies are considered to be a transition point between elliptical and spiral galaxies, and were added to the classification system by Hubble approximately 10 years after he created the original one.   Although there are galaxy classification systems in place, a galaxy does not necessarily maintain its shape throughout its life time.
+
+Galaxies can change shape due to galactic mergers and interactions.  When one galaxy approaches or collides with another, the gravitational force between the two can be so strong that the general shapes of the galaxies can forever be changed.  For instance gravitational interactions with other galaxies have been known to morph the arms of spiral galaxies, change or add the bar structure in spiral galaxies, add features such as tidal tails, and sometimes completely merge the two galaxies together [10].  This paper examines how the positions of individual stars in one galaxy can change with an interaction of another galaxy.  This is important in the grand scheme of things, because this project allows students to predict how a galaxy's shape can morph over time in various situations.  Trends in galactic morphology are easily visible in this project despite the simplifications that were made.
+
+Our modern understanding of cosmology indicates that a large fraction of the total matter in the universe is in fact dark matter.  Dark matter does not emit or absorb light and is therefore virtually invisible.  Dark matter is able to interact gravitationally with other matter, so it can be detected by observing trajectories of visible matter.  For example the orbital velocity of visible matter as a function of radius from the center of spiral galaxies does not follow the standard Keplerian motion one would expect for a system with most of the mass concentrated at the center.  In fact, the orbital velocities are larger which suggests that the mass increases more than expected along the galactic radius.  This phenomenon suggests the presence of dark matter in galaxies [11]. Dark matter is distributed non-uniformly throughout the universe. When modeling galaxy mergers and interactions, advanced computer models use smooth particle hydrodynamics to model the diffuse gas and dark matter components of the galaxies.  These simulations can convert the gas into new star populations while the dark matter interacts gravitationally through mean field approximations[3].  Our simplified model ignored these components of galaxies.
+
+Supermassive black holes are believed to reside in the center of galaxies due to their strong gravitational pull in relation to their size [12].  Recently a black hole was discovered in the center of a quasar that was 12 billion times the mass of our sun [13].  It is hypothesized that super massive black holes are actually formed through galaxy mergers [14].  Since the universe is expanding, the early universe was a lot more compact and more galactic interactions were able to occur. The kind of computational modeling used in this project therefore provides students a way to study galactic mergers and the interactions of black holes in the early universe.  
+
+\section{Model, Assumptions, and Simplifications}	
 
 Galaxies are a collection of stars that are orbiting around their common center of mass, interacting through gravity.  Galaxies come in various shapes and sizes, but the scientist Edwin Hubble designed a classification system for galaxies that is still used today.  He grouped galaxies into four categories including elliptical, spiral, disk, and irregular.  Today we have expanded upon these four groups, but only to add subcategories.  Today elliptical galaxies can be classified according to the ratio between their minor axis and major axis dimensions to differentiate between more circular as opposed to more elongated shapes.  Spiral galaxies are now classified with how tight or loose the spiral arms are, and whether or not there are a cluster of stars in a bar shape in the center of the galaxy.  Disk galaxies are considered to be a transition point between elliptical and spiral galaxies, and were added to the classification system by Hubble approximately 10 years after he created the original one.   Although there are galaxy classification systems in place, a galaxy does not necessarily maintain its shape throughout its life time.
 
@@ -88,7 +234,7 @@ Galaxies are very complicated entities and there are a lot of factors that can c
 \begin{table}[h!]
 \centering
 \caption{Key for variables shown in Figure \ref{geometry_fig}.}
-\begin{ruledtabular}
+%\begin{ruledtabular}
 \begin{tabular}{l p{8cm}}
 % The codes above determine the horizontal alignment in each column.
 % Options are l (left), r (right), c (centered), and p (paragraph).
@@ -102,7 +248,7 @@ $\vec{V}_{min}$ & Minimum velocity of disrupting galaxy \\
 $R_0$ & Initial separation between the two galaxies \\
 $R_{min}$ & Minimum separation between the two galaxies \\
 \end{tabular}
-\end{ruledtabular}
+%\end{ruledtabular}
 \label{table1}
 \end{table}
 
@@ -362,58 +508,15 @@ I would like to thank the College Based Academic Fee (CBF) for funding my resear
 in galaxy mergers with gas``, Science 316, 1874-1877 (2007) \url{http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-pub-13168.pdf}
 
 \end{thebibliography}
+%\appendix
 
-% If your manuscript is conditionally accepted, the editors will ask you to
-% submit your editable LaTeX source file.  Before doing so, you should move
-% all tables and figure captions to the end, as shown below.  Tables come 
-% first, followed by figure captions (with figure inclusions commented-out).
-% Figures should be submitted as separate files, collected with the
-% LaTeX file into a single .zip archive.
+%\section{Research Groups and Opportunities}
 
-%\newpage   % Start a new page for tables
+%\begin{table}[htdp]%\begin{center}\begin{tabular}{ccccc}\hline Organization & Group Leader & Contact Info & Webpage & Focus \\\hline Cornell University & George G. Malliaras & ggm1@cornell.edu & people.ccmr.cornell.edu/~george/ & Small Molecule/PDMS \\\hline R.U.G. &  &   &   &   \\\hline University of Washington &  &   &   &   \\\hline Berkeley &  &   &   &   \\\hline California Polytechnic State University &  &   &   &   \\\hline UC Santa Barbara &  &   &   &   \\\hline UC Santa Cruz &  &   &   &   \\\hline Stanford &  &   &   &   \\\hline Princeton &   &   &   &  \end{tabular} \caption{Research Groups}%\end{center}%\label{defaulttable}%\end{table}
 
-%\begin{table}[h!]
-%\centering
-%\caption{Elementary bosons}
-%\begin{ruledtabular}
-%\begin{tabular}{l c c c c p{5cm}}
-%Name & Symbol & Mass (GeV/$c^2$) & Spin & Discovered & Interacts with \\
-%\hline
-%Photon & $\gamma$ & \ \ 0 & 1 & 1905 & Electrically charged particles \\
-%Gluons & $g$ & \ \ 0 & 1 & 1978 & Strongly interacting particles (quarks and gluons) \\
-%Weak charged bosons & $W^\pm$ & \ 82 & 1 & 1983 & Quarks, leptons, $W^\pm$, $Z^0$, $\gamma$ \\
-%Weak neutral boson & $Z^0$ & \ 91 & 1 & 1983 & Quarks, leptons, $W^\pm$, $Z^0$ \\
-%Higgs boson & $H$ & 126 & 0 & 2012 & Massive particles (according to theory) \\
-%\end{tabular}
-%\end{ruledtabular}
-%\label{bosons}
-%\end{table}
 
-%\newpage   % Start a new page for figure captions
-
-%\section*{Figure captions}
-
-%\begin{figure}[h!]
-%\centering
-%\includegraphics{GasBulbData.eps}   % This line stays commented-out
-%\caption{Pressure as a function of temperature for a fixed volume of air.  
-%The three data sets are for three different amounts of air in the container. 
-%For an ideal gas, the pressure would go to zero at $-273^\circ$C.  (Notice
-%that this is a vector graphic, so it can be viewed at any scale without
-%seeing pixels.)}
-
-%\label{gasbulbdata}
-%\end{figure}
-
-%\begin{figure}[h!]
-%\centering
-%\includegraphics[width=5in]{ThreeSunsets.jpg}   % This line stays commented-out
-%\caption{Three overlaid sequences of photos of the setting sun, taken
-%near the December solstice (left), September equinox (center), and
-%June solstice (right), all from the same location at 41$^\circ$ north
-%latitude. The time interval between images in each sequence is approximately
-%four minutes.}
-%\label{sunsets}
-%\end{figure}
+%\section{CSUS 19th Annual Student Research Competition Entry}
 
 \end{document}
+
+
