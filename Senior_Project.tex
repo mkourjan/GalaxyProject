@@ -1,52 +1,193 @@
-\documentclass[prb,preprint]{revtex4-1} 
-% The line above defines the type of LaTeX document.
-% Note that AJP uses the same style as Phys. Rev. B (prb).
-
-% The % character begins a comment, which continues to the end of the line.
-
+%\documentclass[prb]{revtex4-1}
+\documentclass[11pt]{article}
+%\documentclass[prb,preprint]{revtex4-1}
+% Users of the {thebibliography} environment or BibTeX should use the
+% scicite.sty package, downloadable from *Science* at
+% www.sciencmag.org/misc/con-info.shtml .  This package should properly
+% format in-text reference calls and reference-list numbers.
+\usepackage{epsfig}
+\usepackage{geometry}
+\geometry{letterpaper}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
 \usepackage{amsmath}  % needed for \tfrac, \bmatrix, etc.
 \usepackage{amsfonts} % needed for bold Greek, Fraktur, and blackboard bold
-\usepackage{graphicx} % needed for figures
+\usepackage{url}
+%\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+% Use times if you have the font installed; otherwise, comment out the
+% following line.
 
-\begin{document}
+\usepackage{times}
 
-% Be sure to use the \title, \author, \affiliation, and \abstract macros
-% to format your title page.  Don't use lower-level macros to  manually
-% adjust the fonts and centering.
+% The preamble here sets up a lot of new/revised commands and
+% environments.  It's annoying, but please do *not* try to strip these
+% out into a separate .sty file (which could lead to the loss of some
+% information when we convert the file to other formats).  Instead, keep
+% them in the preamble of your main LaTeX source file.
+
+
+% The following parameters seem to provide a reasonable page setup.
+
+\topmargin 0.0cm
+\oddsidemargin 0.2cm
+\textwidth 16cm 
+\textheight 21cm
+\footskip 1.0cm
+
+
+%The next command sets up an environment for the abstract to your paper.
+
+\newenvironment{sciabstract}{%
+\begin{quote} \bf}
+{\end{quote}}
+
+
+% If your reference list includes text notes as well as references,
+% include the following line; otherwise, comment it out.
+
+%\renewcommand\refname{References and Notes}
+
+% The following lines set up an environment for the last note in the
+% reference list, which commonly includes acknowledgments of funding,
+% help, etc.  It's intended for users of BibTeX or the {thebibliography}
+% environment.  Users who are hand-coding their references at the end
+% using a list environment such as {enumerate} can simply add another
+% item at the end, and it will be numbered automatically.
+
+\newcounter{lastnote}
+\newenvironment{scilastnote}{%
+\setcounter{lastnote}{\value{enumiv}}%
+\addtocounter{lastnote}{+1}%
+\begin{list}%
+{\arabic{lastnote}.}
+{\setlength{\leftmargin}{.22in}}
+{\setlength{\labelsep}{.5em}}}
+{\end{list}}
+
+
+% Include your paper's title here
 
 \title{Teaching Numerical Methods in the Context of Galaxy Mergers}
-%\title{Galaxy mergers as a tool for teaching computational methods}
-% In a long title you can use \\ to force a line break at a certain location.
 
-\author{Maria Kourjanskaia}
-\email{mashakrj@gmail.com} % optional
-%\altaffiliation[permanent address: ]{101 Main Street, 
-%  Anytown, USA} % optional second address
-% If there were a second author at the same address, we would put another 
-% \author{} statement here.  Don't combine multiple authors in a single
-% \author statement.
-\affiliation{Department of Physics, California Polytechnic State University, San Luis Obispo, CA 93407}
-% Please provide a full mailing address here.
 
-%\author{J.~L.~Klay}
-%\email{jklay@calpoly.edu}
-%\affiliation{Department of Physics, California Polytechnic State University, San Luis Obispo, CA 93407}
+% Place the author information here.  Please hand-code the contact
+% information and notecalls; do *not* use \footnote commands.  Let the
+% author contact information appear immediately below the author names
+% as shown.  We would also prefer that you don't change the type-size
+% settings shown here.
 
-% See the REVTeX documentation for more examples of author and affiliation lists.
+\author
+{\\
+\\
+\\
+\\
+A Senior Project
+\\
+\\
+By
+\\
+\\
+Maria Kourjanskaia
+\\
+\\
+\\ 
+\normalsize{Advisor, Dr. Jennifer Klay}
+\\
+\\
+\normalsize{Department of Physics, California Polytechnic University SLO}\\
+\\
+\\
+\\
+\\
+\\
+}
+
+% Include the date command, but leave its argument blank.
 
 \date{\today}
 
-\begin{abstract}
+
+                                      % Activate to display a given date or no date
+
+\begin{document}
+\baselineskip21pt
+\maketitle
+
+
+\newpage
+
+\begin{center}Approval Page\end{center}
+\bigskip
+
+\begin{flushleft}
+\textbf{Title: Teaching Numerical Methods in the Context of Galaxy Mergers}
+\medskip
+
+\textbf{Author: Maria Kourjanskaia}
+\medskip
+
+\textbf{Date Submitted: May 26, 2016}
+\end{flushleft}
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+
+
+\begin{flushright}
+Senior Project Advisor: Dr. Jennifer Klay
+
+\bigskip
+\bigskip
+
+
+\line(1,0){200}
+
+Signature
+\bigskip
+
+\line(1,0){200}
+
+Date
+
+
+
+\end{flushright}
+
+
+
+
+\newpage
+
+\tableofcontents
+
+\listoftables
+
+\listoffigures
+
+\newpage
+
+\section{Abstract}
 Methods of teaching numerical methods to solve ordinary differential equations in the context of galaxy mergers were explored. The research published in a paper by Toomre and Toomre in 1972 describing the formation of galactic tails and bridges from close tidal interactions was adapted into a project targeting undergraduate physics students. Typically undergraduate physics students only take one Computational Physics class in which various techniques and algorithms are taught. Although it is important to study computational physics techniques, it is just as important to apply this knowledge to a problem that is representative of what computational physics researchers are investigating today. The model that was developed is capable of showing general trends in galactic evolution and is a good introduction for students who hope to expand on this topic in the future.
-\end{abstract}
-% AJP requires an abstract for all regular article submissions.
-% Abstracts are optional for submissions to the "Notes and Discussions" section.
 
-\maketitle % title page is now complete
-
-
-\section{Introduction} % Section titles are automatically converted to all-caps.
-% Section numbering is automatic.
+\section{Introduction} 
 
 Computational physics is based upon the idea that a computer can simulate certain physical environments to produce novel scientific conclusions.  This field allows scientists to conduct experiments on the computer that are just not realistic or possible to do in the real world because of the investigation of topics involving extremely large data sets and complicated physical interactions\cite{Hjorth2008}.  This paper investigates the components and processes of modeling galaxy mergers on an undergraduate academic level.  The project outlined in this paper is derived from a paper written by Toomre and Toomre in 1972 that described the formation of galactic tails and bridges from close tidal interactions \cite{Toomre1972}. This project could be assigned to undergraduate students in an introductory computational physics class to demonstrate the capabilities and possibilities of what the field has to offer.  
 
@@ -56,17 +197,15 @@ Although this project uses ordinary differential equations to model galaxy merge
 
 Although Toomre and Toomre's paper dates back to 1972, it is still a good model to use for undergraduate students in a computational physics class.  Their research provided good and accurate results despite the assumptions and simplifications that they made.  Researchers today can produce more precise results and investigate a larger range of topics than in 1972, but the foundation for producing these results is still the same.  This project is an excellent introduction to the capabilities of computational physics and is a great learning opportunity for undergraduate physics students.  
 
-
 \section{Background Theory}
 
 Galaxies are a collection of stars that are orbiting around their common center of mass, interacting through gravity.  Galaxies come in various shapes and sizes, but the scientist Edwin Hubble designed a classification system for galaxies that is still used today.  He grouped galaxies into four categories including elliptical, spiral, disk, and irregular.  Today we have expanded upon these four groups, but only to add subcategories.  Today elliptical galaxies can be classified according to the ratio between their minor axis and major axis dimensions to differentiate between more circular as opposed to more elongated shapes.  Spiral galaxies are now classified with how tight or loose the spiral arms are, and whether or not there are a cluster of stars in a bar shape in the center of the galaxy.  Disk galaxies are considered to be a transition point between elliptical and spiral galaxies, and were added to the classification system by Hubble approximately 10 years after he created the original one.   Although there are galaxy classification systems in place, a galaxy does not necessarily maintain its shape throughout its life time.
 
-Galaxies can change shape due to galactic mergers and interactions.  When one galaxy approaches or collides with another, the gravitational force between the two can be so strong that the general shapes of the galaxies can forever be changed.  For instance gravitational interactions with other galaxies have been known to morph the arms of spiral galaxies, change or add the bar structure in spiral galaxies, add features such as tidal tails, and sometimes completely merge the two galaxies together \cite{Buta2006}.  This paper examines how the positions of individual stars in one galaxy can change with an interaction of another galaxy.  This is important in the grand scheme of things, because this project allows students to predict how a galaxy?s shape can morph over time in various situations.  Trends in galactic morphology are easily visible in this project despite the simplifications that were made.
+Galaxies can change shape due to galactic mergers and interactions.  When one galaxy approaches or collides with another, the gravitational force between the two can be so strong that the general shapes of the galaxies can forever be changed.  For instance gravitational interactions with other galaxies have been known to morph the arms of spiral galaxies, change or add the bar structure in spiral galaxies, add features such as tidal tails, and sometimes completely merge the two galaxies together [10].  This paper examines how the positions of individual stars in one galaxy can change with an interaction of another galaxy.  This is important in the grand scheme of things, because this project allows students to predict how a galaxy's shape can morph over time in various situations.  Trends in galactic morphology are easily visible in this project despite the simplifications that were made.
 
-Our modern understanding of cosmology indicates that a large fraction of the total matter in the universe is in fact dark matter.  Dark matter does not emit or absorb light and is therefore virtually invisible.  Dark matter is able to interact gravitationally with other matter, so it can be detected by observing trajectories of visible matter.  For example the orbital velocity of visible matter as a function of radius from the center of spiral galaxies does not follow the standard Keplerian motion one would expect for a system with most of the mass concentrated at the center.  In fact, the orbital velocities are larger which suggests that the mass increases more than expected along the galactic radius.  This phenomenon suggests the presence of dark matter in galaxies \cite{Freeman}. Dark matter is distributed non-uniformly throughout the universe. When modeling galaxy mergers and interactions, advanced computer models use smooth particle hydrodynamics to model the diffuse gas and dark matter components of the galaxies.  These simulations can convert the gas into new star populations while the dark matter interacts gravitationally through mean field approximations \cite{Chilingarian2010}.  Our simplified model ignored these components of galaxies.
+Our modern understanding of cosmology indicates that a large fraction of the total matter in the universe is in fact dark matter.  Dark matter does not emit or absorb light and is therefore virtually invisible.  Dark matter is able to interact gravitationally with other matter, so it can be detected by observing trajectories of visible matter.  For example the orbital velocity of visible matter as a function of radius from the center of spiral galaxies does not follow the standard Keplerian motion one would expect for a system with most of the mass concentrated at the center.  In fact, the orbital velocities are larger which suggests that the mass increases more than expected along the galactic radius.  This phenomenon suggests the presence of dark matter in galaxies [11]. Dark matter is distributed non-uniformly throughout the universe. When modeling galaxy mergers and interactions, advanced computer models use smooth particle hydrodynamics to model the diffuse gas and dark matter components of the galaxies.  These simulations can convert the gas into new star populations while the dark matter interacts gravitationally through mean field approximations[3].  Our simplified model ignored these components of galaxies.
 
-
-Supermassive black holes are believed to reside in the center of galaxies due to their strong gravitational pull in relation to their size \cite{Madejski2003}.  Recently a black hole was discovered in the center of a quasar that was 12 billion times the mass of our sun \cite{Wu2015}.  It is hypothesized that super massive black holes are actually formed through galaxy mergers \cite{Mayer2007}.  Since the universe is expanding, the early universe was a lot more compact and more galactic interactions were able to occur. The kind of computational modeling used in this project therefore provides students a way to study galactic mergers and the interactions of black holes in the early universe.  
+Supermassive black holes are believed to reside in the center of galaxies due to their strong gravitational pull in relation to their size [12].  Recently a black hole was discovered in the center of a quasar that was 12 billion times the mass of our sun [13].  It is hypothesized that super massive black holes are actually formed through galaxy mergers [14].  Since the universe is expanding, the early universe was a lot more compact and more galactic interactions were able to occur. The kind of computational modeling used in this project therefore provides students a way to study galactic mergers and the interactions of black holes in the early universe.   
 
 \section{Model, Assumptions, and Simplifications}\label{MAS_sec}
 
@@ -80,7 +219,7 @@ Galaxies are very complicated entities and there are a lot of factors that can c
 %% in your submitted manuscript.  For your initial submission, just make sure 
 %% each figure is reasonably close to where it's first referenced.
 \centering
-\includegraphics[width=5in]{../Figure_A_1.png}
+\includegraphics[width=5in]{Figure_A_1.png}
 \caption{Diagram of the orbital geometry and variables.}
 \label{geometry_fig}
 \end{figure}
@@ -88,7 +227,7 @@ Galaxies are very complicated entities and there are a lot of factors that can c
 \begin{table}[h!]
 \centering
 \caption{Key for variables shown in Figure \ref{geometry_fig}.}
-\begin{ruledtabular}
+%\begin{ruledtabular}
 \begin{tabular}{l p{8cm}}
 % The codes above determine the horizontal alignment in each column.
 % Options are l (left), r (right), c (centered), and p (paragraph).
@@ -102,16 +241,16 @@ $\vec{V}_{min}$ & Minimum velocity of disrupting galaxy \\
 $R_0$ & Initial separation between the two galaxies \\
 $R_{min}$ & Minimum separation between the two galaxies \\
 \end{tabular}
-\end{ruledtabular}
+%\end{ruledtabular}
 \label{table1}
 \end{table}
 
-Table \ref{table2} displays the values that a user can input into the program. Using these numbers and the constraint of a parabolic passage, the initial velocity parameters can be computed.
+Table \ref{table1} displays the values that a user can input into the program. Using these numbers and the constraint of a parabolic passage, the initial velocity parameters can be computed.
 
 \begin{table}[h!]
 \centering
 \caption{User input values for this simulation, following the example of Toomre and Toomre.  The values are chosen such that the distance of closest approach between the two galaxies, $R_{min}$ is 25 kpc.}
-\begin{ruledtabular}
+%\begin{ruledtabular}
 \begin{tabular}{l l l l l}
 % The codes above determine the horizontal alignment in each column.
 % Options are l (left), r (right), c (centered), and p (paragraph).
@@ -124,14 +263,14 @@ Retrograde Passage & -39 & 80 & $10^{11}$ & $10^{11}$ \\
 Light Mass Disruptor & -39 & -80 & $10^{11}$ & 0.25$\times10^{11}$ \\
 Heavy Mass Disruptor & -39 & -80 & $10^{11}$ & 4$\times10^{11}$ \\
 \end{tabular}
-\end{ruledtabular}
+%\end{ruledtabular}
 \label{table2}
 \end{table}
 
 
 This project consisted of two galaxies.  One galaxy contained stars and remained at the origin of our reference frame, whereas the other galaxy had a perfectly parabolic trajectory (in relation to the origin) and was simply a point mass with no stars.  This configuration allows one to clearly observe the evolution of star positions in a galaxy merger.  Additionally the only cases that were examined in this project were direct passage, retrograde passage, light mass disruptor and heavy mass disruptor cases which will soon be explained. 
 
-After $R_{min}$ was set, it was possible to calculate the initial velocity parameters of the disrupting galaxy.  The disrupting galaxy was set to follow a perfect parabolic trajectory, so the initial velocity conditions were extremely important. These conditions pave the trajectory that the galaxy will follow.  First, the Vis-Viva equation was used to determine the minimum velocity of the disrupting galaxy that occured at $R_{min}$.  
+After $R_{min}$ was set, it was possible to calculate the initial velocity parameters of the disrupting galaxy.  The disrupting galaxy was set to follow a perfect parabolic trajectory, so the initial velocity conditions were extremely important. These conditions pave the trajectory that the galaxy will follow.  First, the Vis-Viva equation was used to determine the minimum velocity of the disrupting galaxy that occurred at $R_{min}$.  
 
 \begin{equation}
 v^2 = GM(\frac{2}{r} - \frac{1}{a}) 
@@ -227,12 +366,12 @@ Figure \ref{coords_fig} shows the coordinate system for the galaxy interactions.
 %% in your submitted manuscript.  For your initial submission, just make sure 
 %% each figure is reasonably close to where it's first referenced.
 \centering
-\includegraphics[width=5in]{../Figure2.png}
+\includegraphics[width=5in]{Figure2.png}
 \caption{Coordinate system for galaxy interaction.}
 \label{coords_fig}
 \end{figure}
 
-\section{Set up of the general code}\label{Setup_sec}
+\section{Set Up of the General Code}\label{Setup_sec}
 
 To begin with, the stationary galaxy containing stars is set at the origin.  The bulk of this galaxy is represented as a point mass, which means that all of its mass is concentrated at a point in its center.  The galaxy contains 120 unit-mass stars which are initially distributed throughout 5 discrete, concentric rings around the galaxy.  Each ring contains 12, 18, 24, 30, and 36 stars respectively (the inner most ring contains 12 stars).  For the direct passage, retrograde passage, and light mass disruptor cases the concentric rings are placed at exactly 20, 30, 40, 50, and 60 percent of the minimum distance between the two galaxies $R_{min}$, as shown in Figure \ref{starlocdirect_fig}. 
 
@@ -244,7 +383,7 @@ To begin with, the stationary galaxy containing stars is set at the origin.  The
 %% in your submitted manuscript.  For your initial submission, just make sure 
 %% each figure is reasonably close to where it's first referenced.
 \centering
-\includegraphics[width=5in]{../DirectPassageImage.png}
+\includegraphics[width=5in]{DirectPassageImage.png}
 \caption{Locations of stars in stationary galaxy for direct, retrograde and light mass disruptor cases.}
 \label{starlocdirect_fig}
 \end{figure}
@@ -259,9 +398,9 @@ On the other hand, in the heavy mass disruptor case the rings are more tightly p
 %% in your submitted manuscript.  For your initial submission, just make sure 
 %% each figure is reasonably close to where it's first referenced.
 \centering
-\includegraphics[width=5in]{../HeavyPassageImage.png}
+\includegraphics[width=5in]{HeavyPassageImage.png}
 \caption{Stationary galaxy for heavy mass disruptor case.}
-\label{starlocdirect_fig}
+\label{starlocheavy_fig}
 \end{figure}
 
 In all cases this minimum distance ($R_{min}$) is set at 25 kpc.  The initial time was set to $t$ = 0 and the time step was set to exactly $10^8$ years.  In all of the featured cases, the heavier mass was set to $10^{11}$ solar masses.  To compute and visualize the simulations, several Python-based numerical tools in the NumPy, Matplotlib, and SciPy packages were used, including SciPy's \texttt{odeint} differential equation integrator and the iPython interact features.  Each of the main program functions are described next.\\
@@ -280,11 +419,11 @@ This function takes as inputs the gravitational constant in appropriate units (\
 
 \textbf{\texttt{Unpack\_rings\_vel(rings, velocity):}}
 
-This function takes in the arguments `rings` and `velocity` which are the outputs from \texttt{Init\_rings}.  The purpose of this function is to organize the information in the rings and velocity arrays into separate lists of x positions of stars, y positions of stars, x velocities of stars, and y velocities of stars.  This can be accomplished by writing a for loop that loops through the rings and velocity arrays and selects the desired information using indexing techniques and appending the proper information to an initially empty list.  This function returns four separate arrays that describe the x and y positions and velocities of the stars.\\
+This function takes in the arguments \texttt{rings} and \texttt{velocity} which are the outputs from \texttt{Init\_rings}.  The purpose of this function is to organize the information in the rings and velocity arrays into separate lists of x positions of stars, y positions of stars, x velocities of stars, and y velocities of stars.  This can be accomplished by writing a for loop that loops through the rings and velocity arrays and selects the desired information using indexing techniques and appending the proper information to an initially empty list.  This function returns four separate arrays that describe the x and y positions and velocities of the stars.\\
 
 \textbf{\texttt{Derivgalaxy(y, t, M, S):}}
 
-This function takes as inputs an array containing all of the position and velocity information of the disturbing and stationary galaxies (\texttt{y}), the period of time to be examined (\texttt{t}), and the stationary (\texttt{S}) and disrupting (\texttt{M}) galactic masses.  The disrupting galaxy and star locations and velocities for each time step are computed using equations \ref{star_en} and \ref{disruptor_en} with SciPy's \texttt{odeint} differential equation integrator to describe the position of each star and disrupting galaxy over time.  This function outputs an array of the x and y velocity and acceleration values of each star and disrupting galaxy.\\
+This function takes as inputs an array containing all of the position and velocity information of the disturbing and stationary galaxies (\texttt{y}), the period of time to be examined (\texttt{t}), and the stationary (\texttt{S}) and disrupting (\texttt{M}) galactic masses.  The disrupting galaxy and star locations and velocities for each time step are computed using equations \ref{star_eqn} and \ref{disruptor_eqn} with SciPy's \texttt{odeint} differential equation integrator to describe the position of each star and disrupting galaxy over time.  This function outputs an array of the x and y velocity and acceleration values of each star and disrupting galaxy.\\
 
 \textbf{\texttt{Make\_Master\_Array(Case = 1, Rx0 = -39, Ry0 = -80, M = 1.0e11, S = 1.0e11):}}
 
@@ -296,7 +435,7 @@ This function generates the visualization of the galaxy interaction.  It takes a
 
 \textbf{\texttt{Make\_Plots\_Yellow\_Star(results, M, S, t, dt, Yellowstar):}}
 
-This function is almost identical to the previous `Make\_Plot\_Stars` function, except it contains an extra argument called \texttt{Yellowstar} that allows the user to index a certain star in the master array to be colored yellow (all of the other stars are red).  All stars are plotted as before but a second loop runs to draw second yellow star on top of the existing red one.  Although two stars are plotted in one location, the user only sees the yellow star that is covering the red one. 
+This function is almost identical to the previous \texttt{Make\_Plot\_Stars} function, except it contains an extra argument called \texttt{Yellowstar} that allows the user to index a certain star in the master array to be colored yellow (all of the other stars are red).  All stars are plotted as before but a second loop runs to draw second yellow star on top of the existing red one.  Although two stars are plotted in one location, the user only sees the yellow star that is covering the red one. 
 
 \section{Challenges}
 
@@ -306,7 +445,7 @@ Another challenge to be aware of is setting the proper time step.  If one sets a
 
 \section{Validation}
 
-To validate the correctness of our simulation, we compared our results to the four cases studied by Toomre and Toomre \cite{Toomre1972}.  The four cases were direct passage, retrograde passage, light mass disruptor and heavy mass disruptor.  Direct passage occurs when the stationary galaxy and disrupting galaxy have equal mass, and the disrupting galaxy approaches the stationary one along a parabola with the same direction that the stars are orbiting.   Retrograde passage is very similar except the disrupting galaxy approaches in the opposite direction that the stars are orbiting.  A way to visualize these concepts is that the stars are orbiting counter clockwise and in a direct passage the galaxy approaches counter clockwise as well, whereas in the retrograde passage the disruptor follows a clockwise trajectory.  A light mass disruptor was also modeled where the disrupting galaxy approached along a direct approach, but had only a quarter of the mass of the stationary galaxy.  The heavy mass disruptor on the other hand was also a direct approach, but the disruptor had four times the galactic mass of the stationary galaxy.  We confirmed that our simulations of these cases matched the results published in \cite{Toomre1972}, demonstrating that it can be used to explore new configurations with confidence that the physics is valid. Below is a demonstration of the direct passage case modeled after the Toomre and Toomre results.
+To validate the correctness of our simulation, we compared our results to the four cases studied by Toomre and Toomre \cite{Toomre1972}.  The four cases were direct passage, retrograde passage, light mass disruptor and heavy mass disruptor.  Direct passage occurs when the stationary galaxy and disrupting galaxy have equal mass, and the disrupting galaxy approaches the stationary one along a parabola with the same direction that the stars are orbiting.   Retrograde passage is very similar except the disrupting galaxy approaches in the opposite direction that the stars are orbiting.  A way to visualize these concepts is that the stars are orbiting counter clockwise and in a direct passage the galaxy approaches counter clockwise as well, whereas in the retrograde passage the disruptor follows a clockwise trajectory.  A light mass disruptor was also modeled where the disrupting galaxy approached along a direct approach, but had only a quarter of the mass of the stationary galaxy.  The heavy mass disruptor on the other hand was also a direct approach, but the disruptor had four times the galactic mass of the stationary galaxy.  We confirmed that our simulations of these cases matched the results published in \cite{Toomre1972}, demonstrating that it can be used to explore new configurations with confidence that the physics is valid. 
 
 \section{Applications and Future Extensions}
 
@@ -320,11 +459,11 @@ Finally it would be interesting to include gravitational interactions between th
 
 Computational Physics is a very broad field that covers many interesting topics.  This project focuses on modeling galaxy interactions, a sub-topic of astrophysics and cosmology.  Galaxies have many complicated factors such as dark matter, black holes, and star-star interactions that computational physicists must model on super computers. Super computers are not commonly available to undergraduate physics students, therefore this project was created to let students model galaxies using the iPython notebook on their laptops.  The project was modeled after the 1972 Toomre and Toomre paper that described the formation of galactic tails and bridges.  Toomre and Toomre imposed certain simplifications on their model including unit-mass stars, no dark matter or black holes, and a finite number of particles to track.  These assumptions were then adopted into this project.  Although the model is not as precise as  cutting-edge research that is currently being conducted on galaxy mergers, the model is definitely good enough to see general trends and is therefore interesting for undergraduates to study.   
 
-\begin{acknowledgments}
+\section*{Acknowledgments}
 
 I would like to thank the College Based Academic Fee (CBF) for funding my research.  This money allowed me to spend my summer developing this project into what it has become.  Additionally I would like to acknowledge the Spring 2014 Physics on a Computer class that introduced me to the topic of modeling Galaxy Mergers.  This class is really where this project began!  Last of all I would like to thank my wonderful advisor Jennifer Klay for her patience and hard work in making this project a reality.  
 
-\end{acknowledgments}
+%\end{acknowledgments}
 
 
 \begin{thebibliography}{99}
@@ -362,58 +501,15 @@ I would like to thank the College Based Academic Fee (CBF) for funding my resear
 in galaxy mergers with gas``, Science 316, 1874-1877 (2007) \url{http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-pub-13168.pdf}
 
 \end{thebibliography}
+%\appendix
 
-% If your manuscript is conditionally accepted, the editors will ask you to
-% submit your editable LaTeX source file.  Before doing so, you should move
-% all tables and figure captions to the end, as shown below.  Tables come 
-% first, followed by figure captions (with figure inclusions commented-out).
-% Figures should be submitted as separate files, collected with the
-% LaTeX file into a single .zip archive.
+%\section{Research Groups and Opportunities}
 
-%\newpage   % Start a new page for tables
+%\begin{table}[htdp]%\begin{center}\begin{tabular}{ccccc}\hline Organization & Group Leader & Contact Info & Webpage & Focus \\\hline Cornell University & George G. Malliaras & ggm1@cornell.edu & people.ccmr.cornell.edu/~george/ & Small Molecule/PDMS \\\hline R.U.G. &  &   &   &   \\\hline University of Washington &  &   &   &   \\\hline Berkeley &  &   &   &   \\\hline California Polytechnic State University &  &   &   &   \\\hline UC Santa Barbara &  &   &   &   \\\hline UC Santa Cruz &  &   &   &   \\\hline Stanford &  &   &   &   \\\hline Princeton &   &   &   &  \end{tabular} \caption{Research Groups}%\end{center}%\label{defaulttable}%\end{table}
 
-%\begin{table}[h!]
-%\centering
-%\caption{Elementary bosons}
-%\begin{ruledtabular}
-%\begin{tabular}{l c c c c p{5cm}}
-%Name & Symbol & Mass (GeV/$c^2$) & Spin & Discovered & Interacts with \\
-%\hline
-%Photon & $\gamma$ & \ \ 0 & 1 & 1905 & Electrically charged particles \\
-%Gluons & $g$ & \ \ 0 & 1 & 1978 & Strongly interacting particles (quarks and gluons) \\
-%Weak charged bosons & $W^\pm$ & \ 82 & 1 & 1983 & Quarks, leptons, $W^\pm$, $Z^0$, $\gamma$ \\
-%Weak neutral boson & $Z^0$ & \ 91 & 1 & 1983 & Quarks, leptons, $W^\pm$, $Z^0$ \\
-%Higgs boson & $H$ & 126 & 0 & 2012 & Massive particles (according to theory) \\
-%\end{tabular}
-%\end{ruledtabular}
-%\label{bosons}
-%\end{table}
 
-%\newpage   % Start a new page for figure captions
-
-%\section*{Figure captions}
-
-%\begin{figure}[h!]
-%\centering
-%\includegraphics{GasBulbData.eps}   % This line stays commented-out
-%\caption{Pressure as a function of temperature for a fixed volume of air.  
-%The three data sets are for three different amounts of air in the container. 
-%For an ideal gas, the pressure would go to zero at $-273^\circ$C.  (Notice
-%that this is a vector graphic, so it can be viewed at any scale without
-%seeing pixels.)}
-
-%\label{gasbulbdata}
-%\end{figure}
-
-%\begin{figure}[h!]
-%\centering
-%\includegraphics[width=5in]{ThreeSunsets.jpg}   % This line stays commented-out
-%\caption{Three overlaid sequences of photos of the setting sun, taken
-%near the December solstice (left), September equinox (center), and
-%June solstice (right), all from the same location at 41$^\circ$ north
-%latitude. The time interval between images in each sequence is approximately
-%four minutes.}
-%\label{sunsets}
-%\end{figure}
+%\section{CSUS 19th Annual Student Research Competition Entry}
 
 \end{document}
+
+
